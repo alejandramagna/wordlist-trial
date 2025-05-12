@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Emparejar Verbos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Aprende Verbos en Inglés</h1>
+            <p>Empareja el verbo en inglés con su traducción al español. ¡Haz clic en el verbo en inglés para escuchar su pronunciación!</p>
+        </header>
+
+        <main class="game-board">
+            <section class="column" id="english-column">
+                <h2>Inglés</h2>
+                <div class="words-container" id="english-words-container">
+                    <!-- Los botones de verbos en inglés se insertarán aquí por JavaScript -->
+                </div>
+            </section>
+
+            <section class="column" id="spanish-column">
+                <h2>Español</h2>
+                <div class="words-container" id="spanish-words-container">
+                    <!-- Los botones de traducciones en español se insertarán aquí por JavaScript -->
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p id="feedback-message"> </p> <!-- Espacio para mensajes de feedback -->
+            <p>Ronda Actual: <span id="current-round-matches">0</span> / <span id="current-round-total">0</span></p>
+            <p>Progreso Total: <span id="total-progress-matches">0</span> / <span id="total-progress-total">0</span></p>
+            <button id="next-set-button" class="action-button" style="display: none;">Siguiente Tanda</button>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 700px;
+    text-align: center;
+}
+
+header h1 {
+    color: #007bff;
+    margin-bottom: 5px;
+}
+
+header p {
+    font-size: 0.9em;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.game-board {
+    display: flex;
+    justify-content: space-around;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.column {
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 10px;
+    width: 48%;
+    min-height: 200px; /* Para asegurar espacio visual */
+}
+
+.column h2 {
+    font-size: 1.1em;
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.words-container button { /* Estilizando los botones de palabras */
+    display: block;
+    width: calc(100% - 16px); /* Ajustar para padding del botón */
+    background-color: #e9ecef;
+    color: #212529;
+    border: 1px solid #ced4da;
+    padding: 8px;
+    margin: 6px auto;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: bold;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.words-container button:hover {
+    background-color: #dde2e6;
+    border-color: #b9bfc4;
+}
+
+.words-container button.selected {
+    background-color: #007bff;
+    color: white;
+    border-color: #0056b3;
+}
+
+.words-container button.matched {
+    background-color: #28a745 !important; /* Verde */
+    color: white !important;
+    border-color: #1e7e34 !important;
+    cursor: default;
+    opacity: 0.6;
+}
+
+.words-container button.incorrect-flash {
+    background-color: #dc3545 !important; /* Rojo */
+    color: white !important;
+    border-color: #c82333 !important;
+}
+
+
+footer p {
+    margin: 5px 0;
+    font-size: 0.9em;
+}
+
+#feedback-message {
+    font-weight: bold;
+    min-height: 1.2em; /* Evitar saltos de layout */
+    margin-bottom: 10px;
+}
+
+#feedback-message.correct {
+    color: #28a745;
+}
+
+#feedback-message.incorrect {
+    color: #dc3545;
+}
+
+.action-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 10px;
+    transition: background-color 0.2s;
+}
+
+.action-button:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 600px) {
+    .game-board {
+        flex-direction: column;
+    }
+    .column {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .container {
+        padding: 15px;
+    }
+    header h1 {
+        font-size: 1.4em;
+    }
+}
