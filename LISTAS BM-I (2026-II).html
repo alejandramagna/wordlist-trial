@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>English In-Focus | Control de Asistencia BM-I</title>
+    <link href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.18/400.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.18/700.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.18/900.css" rel="stylesheet">
+    <style>
+        :root {
+            --ua-blue: #B0CFE8; 
+            --ua-red: #A80033; 
+            --ua-yellow: #FAB800; 
+            --ua-green: #14542B;
+            --ua-silver: #C5CDD2;
+            --bg-page: #ffffff;
+            --bg-pale-green: #EAF2EC; 
+            --bg-card: #FFFFFF; 
+            --border-light: #D2DCE2;
+            --text-main: #4A5568;
+            --text-dark: #1A202C;
+
+            --status-present: #2e7d32;
+            --status-present-bg: #e8f5e9;
+            --status-absent: #c62828;
+            --status-absent-bg: #ffebee;
+            --status-late: #f57f17;
+            --status-late-bg: #fffde7;
+            --status-retired: #e65100;
+            --status-retired-bg: #fff3e0;
+            --status-empty: #9e9e9e;
+            --status-empty-bg: #f5f5f5;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-page); 
+            color: var(--text-main); 
+            line-height: 1.6; 
+            min-height: 100vh;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        /* 4-Color Page Outer Frame */
+        .wrapper-outer {
+            position: relative;
+            padding: 8px; 
+            min-height: 100vh;
+            background: linear-gradient(to right, 
+                var(--ua-blue) 0%, var(--ua-blue) 25%, 
+                var(--ua-red) 25%, var(--ua-red) 50%, 
+                var(--ua-yellow) 50%, var(--ua-yellow) 75%, 
+                var(--ua-green) 75%, var(--ua-green) 100%
+            );
+            display: flex;
+            flex-direction: column;
+        }
+
+        .wrapper-inner {
+            background-color: var(--bg-page);
+            border-radius: 12px;
+            overflow: hidden;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 16px;
+            width: 100%;
+        }
+
+        /* Animations */
+        @keyframes breatheBg {
+            0%, 100% { background-color: #ffffff; }
+            50% { background-color: #F0F7F4; }
+        }
+
+        @keyframes pulseScale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes breatheTextDarker {
+            0%, 100% { color: var(--text-main); }
+            50% { color: var(--text-dark); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header Block */
+        header {
+            background-color: #ffffff;
+            padding: 24px 0 16px 0;
+            border-bottom: 2px solid var(--border-light);
+            text-align: center;
+            animation: breatheBg 6s ease-in-out infinite;
+        }
+
+        .main-title {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(1.8rem, 6vw, 3.2rem); 
+            font-weight: 900;
+            color: var(--ua-green);
+            letter-spacing: -1.5px;
+            margin-bottom: 4px;
+            line-height: 1.2; 
+            display: inline-block;
+            animation: pulseScale 6s ease-in-out infinite;
+        }
+
+        .subtitle {
+            font-family: "Georgia Pro", "Georgia", serif;
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--text-main);
+            animation: breatheTextDarker 6s ease-in-out infinite;
+        }
+
+        .brand-color-bar {
+            display: flex;
+            width: 100%;
+            height: 12px;
+            margin: 14px auto 0;
+            border-radius: 50px;
+            overflow: hidden;
+            max-width: 480px;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            animation: pulseScale 6s ease-in-out infinite;
+        }
+
+        .bar { flex: 1; height: 100%; }
+        .bar-blue { background-color: var(--ua-blue); }
+        .bar-red { background-color: var(--ua-red); }
+        .bar-yellow { background-color: var(--ua-yellow); }
+        .bar-green { background-color: var(--ua-green); }
+
+        /* Group Navigation Tabs */
+        .group-tabs-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .tab-btn {
+            background-color: #f8fafc;
+            color: var(--text-dark);
+            border: 2px solid var(--ua-blue);
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            touch-action: manipulation;
+        }
+
+        .tab-btn:hover {
+            background-color: var(--ua-blue);
+            color: var(--text-dark);
+        }
+
+        .tab-btn.active {
+            background-color: var(--ua-blue);
+            color: var(--text-dark);
+            border-color: var(--ua-blue);
+            box-shadow: 0 4px 12px rgba(176, 207, 232, 0.45);
+        }
+
+        /* Main Workspace */
+        main {
+            padding: 20px 0 40px 0;
+        }
+
+        .content-header-group {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .content-title {
+            font-size: clamp(1.3rem, 4vw, 2.2rem); 
+            font-weight: 900;
+            color: var(--ua-green);
+            letter-spacing: -1px;
+            margin-bottom: 2px;
+        }
+
+        .content-subtitle {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-main); 
+        }
+
+        /* Controls Toolbar */
+        .controls-card {
+            background-color: #FFF9E6;
+            border: 2px solid var(--ua-yellow);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .control-label {
+            font-weight: 800;
+            font-size: 0.88rem;
+            color: var(--ua-green);
+        }
+
+        input[type="date"] {
+            padding: 7px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            color: var(--text-dark);
+            outline: none;
+            background-color: #ffffff;
+            font-size: 0.88rem;
+        }
+
+        .btn {
+            background-color: var(--ua-green);
+            color: #ffffff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            touch-action: manipulation;
+        }
+
+        .btn:hover:not(:disabled) {
+            opacity: 0.92;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(20, 84, 43, 0.2);
+        }
+
+        .btn-outline {
+            background-color: #ffffff;
+            border: 2px solid var(--ua-green);
+            color: var(--ua-green);
+        }
+
+        .btn-outline:hover:not(:disabled) {
+            background-color: var(--ua-green);
+            color: #ffffff;
+        }
+
+        .btn-danger {
+            background-color: var(--ua-red);
+            color: #ffffff;
+        }
+
+        .btn-secondary {
+            background-color: var(--ua-blue);
+            color: var(--text-dark);
+        }
+
+        /* Botón Profesora Estilos */
+        .btn-teacher-locked {
+            background-color: #718096;
+            color: #ffffff;
+            border: 2px solid #4A5568;
+        }
+        .btn-teacher-unlocked {
+            background-color: var(--ua-red);
+            color: #ffffff;
+            border: 2px solid var(--ua-red);
+            box-shadow: 0 0 8px rgba(168, 0, 51, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Modo Bloqueado Tabla */
+        .is-locked .status-badge {
+            cursor: not-allowed !important;
+        }
+        .is-locked .status-badge:hover {
+            transform: none !important;
+        }
+        .is-locked .btn-del-student,
+        .is-locked .btn-edit-student {
+            display: none !important;
+        }
+
+        /* Student Detail Popover Modal */
+        .student-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .student-modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .student-modal-card {
+            background: #ffffff;
+            border: 3px solid var(--ua-green);
+            border-radius: 14px;
+            width: 100%;
+            max-width: 460px;
+            padding: 20px;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--bg-pale-green);
+            padding-bottom: 10px;
+            margin-bottom: 14px;
+        }
+
+        .modal-title-name {
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: var(--ua-green);
+            line-height: 1.3;
+        }
+
+        .modal-date-tag {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-main);
+            background: var(--bg-pale-green);
+            padding: 3px 8px;
+            border-radius: 12px;
+            margin-top: 4px;
+            display: inline-block;
+        }
+
+        .btn-close-modal {
+            background: transparent;
+            border: none;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: var(--text-main);
+            cursor: pointer;
+            padding: 0 5px;
+        }
+
+        .modal-body {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        textarea {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.88rem;
+            padding: 10px;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            outline: none;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        textarea:focus {
+            border-color: var(--ua-green);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        /* Metrics Summary Bar */
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .stat-box {
+            background-color: #f0f7fc;
+            border: 2px solid var(--ua-blue);
+            border-radius: 10px;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: var(--text-dark);
+        }
+
+        .stat-label {
+            font-size: 0.68rem;
+            color: var(--text-main);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* Simplified Date Navigator Bar Above Table */
+        .date-navigator-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--bg-pale-green);
+            padding: 8px 12px;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            border: 1px solid var(--border-light);
+            border-bottom: none;
+            gap: 8px;
+        }
+
+        .active-date-display {
+            font-weight: 900;
+            font-size: 0.9rem;
+            color: var(--ua-green);
+            text-align: center;
+        }
+
+        /* Robust Table Container */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border: 1px solid var(--border-light);
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+            position: relative;
+            touch-action: pan-x pan-y;
+        }
+
+        /* Custom Scrollbar for PC */
+        .table-wrapper::-webkit-scrollbar {
+            height: 10px;
+        }
+        .table-wrapper::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background: var(--ua-green);
+            border-radius: 6px;
+        }
+
+        .attendance-table {
+            width: max-content;
+            min-width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        .attendance-table th, 
+        .attendance-table td {
+            padding: 8px 9px;
+            border-bottom: 1px solid var(--border-light);
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        /* Base Header */
+        .attendance-table th {
+            background-color: var(--bg-pale-green);
+            color: var(--ua-green);
+            font-weight: 900;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        /* Column 1 (#) Sticky Left */
+        .attendance-table th:nth-child(1),
+        .attendance-table td:nth-child(1) {
+            position: sticky;
+            left: 0;
+            z-index: 5;
+            background-color: #ffffff;
+            width: 32px;
+            min-width: 32px;
+            max-width: 32px;
+            text-align: center;
+            padding: 8px 4px;
+        }
+
+        /* Column 2 (Apellidos y Nombres) */
+        .attendance-table th:nth-child(2),
+        .attendance-table td:nth-child(2) {
+            position: sticky;
+            left: 32px;
+            z-index: 5;
+            background-color: #ffffff;
+            border-right: 2px solid var(--border-light);
+            box-shadow: 3px 0 6px -2px rgba(0,0,0,0.12);
+            white-space: nowrap;
+            width: max-content;
+            padding: 8px 10px;
+        }
+
+        /* CORNER HEADERS (Fondo Sólido Garantizado) */
+        .attendance-table th:nth-child(1) {
+            z-index: 25 !important;
+            background-color: var(--bg-pale-green) !important;
+        }
+
+        .attendance-table th:nth-child(2) {
+            z-index: 25 !important;
+            background-color: var(--bg-pale-green) !important;
+        }
+
+        /* Column 3 (Resumen %) & Fechas Flotantes */
+        .col-summary,
+        .attendance-table th:nth-child(3),
+        .attendance-table td:nth-child(3) {
+            min-width: 105px;
+            width: 105px;
+            text-align: center;
+            background-color: #f8fafc;
+            padding: 8px 6px;
+        }
+
+        .attendance-table tr:hover td:nth-child(1),
+        .attendance-table tr:hover td:nth-child(2) {
+            background-color: #f7faf8;
+        }
+
+        .attendance-table th.clickable-header {
+            cursor: pointer;
+        }
+
+        .attendance-table th.clickable-header:hover {
+            background-color: #dbece1;
+            color: #0d381c;
+        }
+
+        /* Highlight Active Column Header */
+        .attendance-table th.active-column-header {
+            background-color: var(--ua-green) !important;
+            color: #ffffff !important;
+            font-weight: 900;
+            box-shadow: inset 0 -3px 0 var(--ua-yellow);
+        }
+
+        /* Highlight Active Column Cells */
+        .attendance-table td.active-column-cell {
+            background-color: #edf7f2 !important;
+            border-left: 1.5px solid rgba(20, 84, 43, 0.25);
+            border-right: 1.5px solid rgba(20, 84, 43, 0.25);
+        }
+
+        .col-num { 
+            text-align: center; 
+            font-weight: 700; 
+            color: var(--text-main);
+            vertical-align: middle;
+        }
+
+        .col-name-cell {
+            white-space: nowrap;
+        }
+
+        .col-name-container { 
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            line-height: 1.2;
+            gap: 8px;
+        }
+
+        .student-name-wrapper {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .student-name-text {
+            font-weight: 700;
+            color: var(--ua-green);
+            cursor: pointer;
+            text-decoration: underline;
+            text-decoration-color: rgba(20, 84, 43, 0.3);
+            text-underline-offset: 3px;
+            transition: color 0.15s;
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        .student-name-text:hover {
+            color: #0d381c;
+            text-decoration-color: var(--ua-green);
+        }
+
+        .note-indicator-icon {
+            font-size: 0.85rem;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        /* Botones de acción individual por estudiante (Editar / Borrar) */
+        .student-actions {
+            display: inline-flex;
+            gap: 2px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        .btn-edit-student,
+        .btn-del-student {
+            background: transparent;
+            border: none;
+            font-size: 0.85rem;
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 4px;
+            opacity: 0.6;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-edit-student {
+            color: var(--ua-green);
+        }
+
+        .btn-edit-student:hover {
+            opacity: 1;
+            background-color: var(--bg-pale-green);
+        }
+
+        .btn-del-student {
+            color: var(--ua-red);
+        }
+
+        .btn-del-student:hover {
+            opacity: 1;
+            background-color: var(--status-absent-bg);
+        }
+
+        /* Attendance Status Badges */
+        .status-cell {
+            text-align: center;
+            width: 50px;
+            min-width: 50px;
+            vertical-align: middle;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            font-weight: 900;
+            font-size: 0.85rem;
+            user-select: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            cursor: pointer;
+            margin: 0 auto;
+            touch-action: manipulation;
+        }
+
+        .status-badge:hover {
+            transform: scale(1.1);
+        }
+
+        .st-P { background-color: var(--status-present-bg); color: var(--status-present); border: 2px solid var(--status-present); }
+        .st-A { background-color: var(--status-absent-bg); color: var(--status-absent); border: 2px solid var(--status-absent); }
+        .st-L { background-color: var(--status-late-bg); color: var(--status-late); border: 2px solid var(--status-late); }
+        .st-R { background-color: var(--status-retired-bg); color: var(--status-retired); border: 2px solid var(--status-retired); }
+        .st-EMPTY { background-color: var(--status-empty-bg); color: var(--status-empty); border: 1px dashed var(--border-light); }
+
+        /* Legend */
+        .legend-bar {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 14px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            flex-wrap: wrap;
+        }
+
+        .legend-item { display: flex; align-items: center; gap: 5px; }
+
+        /* Footer */
+        footer {
+            background-color: #ffffff;
+            text-align: center;
+            padding: 30px 0;
+            border-top: 2px solid var(--border-light);
+            margin-top: auto;
+            animation: breatheBg 6s ease-in-out infinite;
+        }
+
+        .footer-title {
+            font-weight: 900;
+            font-size: 1.3rem;
+            color: var(--ua-green);
+            margin-top: 8px;
+        }
+
+        .footer-sub {
+            font-family: "Georgia Pro", "Georgia", serif;
+            font-size: 0.95rem; 
+            font-style: italic;
+            color: var(--text-main);
+            margin-top: 2px;
+            animation: breatheTextDarker 6s ease-in-out infinite;
+        }
+
+        .footer-motivation {
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: var(--ua-green);
+            margin-top: 6px;
+            display: inline-block; 
+            animation: pulseScale 6s ease-in-out infinite;
+        }
+
+        /* Mobile Optimization (< 768px) */
+        @media (max-width: 768px) {
+            .container { padding: 0 4px; }
+            .controls-card { padding: 10px; gap: 6px; }
+            .control-group { width: 100%; justify-content: flex-start; gap: 6px; }
+            .btn { padding: 7px 10px; font-size: 0.78rem; }
+            .stats-summary { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+            .stat-box { padding: 6px 4px; }
+            .stat-value { font-size: 1.1rem; }
+            .stat-label { font-size: 0.62rem; }
+            .group-tabs-container { flex-direction: row; gap: 6px; }
+            .tab-btn { padding: 8px 10px; font-size: 0.8rem; flex: 1; text-align: center; }
+
+            .attendance-table th:nth-child(1),
+            .attendance-table td:nth-child(1) {
+                width: 26px;
+                min-width: 26px;
+                max-width: 26px;
+                padding: 6px 2px;
+            }
+
+            .attendance-table th:nth-child(2),
+            .attendance-table td:nth-child(2) {
+                left: 26px;
+                padding: 6px 6px;
+            }
+
+            .student-name-text {
+                font-size: 0.76rem;
+                white-space: nowrap;
+            }
+
+            .col-summary,
+            .attendance-table th:nth-child(3),
+            .attendance-table td:nth-child(3) {
+                min-width: 78px;
+                width: 78px;
+                font-size: 0.7rem;
+                padding: 6px 2px;
+            }
+
+            .status-cell {
+                width: 42px;
+                min-width: 42px;
+            }
+
+            .status-badge {
+                width: 28px;
+                height: 28px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrapper-outer">
+    <div class="wrapper-inner">
+        
+        <!-- Header -->
+        <header>
+            <div class="container">
+                <h1 class="main-title">English In-Focus</h1>
+                <p class="subtitle">Prof. Alejandra García Ziehe</p>
+                
+                <!-- Group Navigation Tabs -->
+                <div class="group-tabs-container">
+                    <button class="tab-btn active" id="tabG1" onclick="switchGroup('G1')">Grupo 1: BM-I (G1)</button>
+                    <button class="tab-btn" id="tabG2" onclick="switchGroup('G2')">Grupo 2: BM-I (G2)</button>
+                </div>
+
+                <div class="brand-color-bar">
+                    <div class="bar bar-blue"></div>
+                    <div class="bar bar-red"></div>
+                    <div class="bar bar-yellow"></div>
+                    <div class="bar bar-green"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main>
+            <div class="container">
+                
+                <div class="content-header-group">
+                    <h2 class="content-title" id="contentTitle">Control de Asistencia BM-I (G1)</h2>
+                    <p class="content-subtitle">Registro Provisorio</p>
+                </div>
+
+                <!-- Controls Bar -->
+                <div class="controls-card">
+                    <div class="control-group">
+                        <!-- Botón Profesora -->
+                        <button class="btn btn-teacher-locked" id="btnTeacherLock" onclick="toggleTeacherLock()" title="Haga clic para desbloquear las ediciones con contraseña">🔒 Profesora</button>
+                        
+                        <label class="control-label" for="sessionDate">Clase Actual:</label>
+                        <input type="date" id="sessionDate" onchange="switchDateSession()">
+
+                        <button class="btn btn-outline editable-btn" onclick="addNewSession()">+ Nueva Fecha</button>
+                        <button class="btn btn-outline editable-btn" onclick="editCurrentSessionDate()" title="Cambiar la fecha de esta clase sin perder datos">✏️ Cambiar Fecha</button>
+                        <button class="btn btn-danger editable-btn" onclick="deleteCurrentSession()" title="Borrar esta fecha">🗑️ Borrar Clase</button>
+                    </div>
+
+                    <div class="control-group">
+                        <button class="btn btn-outline editable-btn" id="btnUndo" onclick="undo()" disabled title="Deshacer última acción (Ctrl+Z)">↩️ Deshacer</button>
+                        <button class="btn btn-outline editable-btn" id="btnRedo" onclick="redo()" disabled title="Rehacer acción (Ctrl+Y)">↪️ Rehacer</button>
+                        <button class="btn btn-outline editable-btn" onclick="addStudent()">+ Estudiante</button>
+                        <button class="btn btn-outline editable-btn" onclick="markAllPresent()" title="Marcar todos los estudiantes como presentes">✓ Todos Presentes</button>
+                        <button class="btn btn-outline editable-btn" onclick="markAllAbsent()" title="Marcar todos los estudiantes como ausentes">✕ Todos Ausentes</button>
+                        <button class="btn editable-btn" onclick="finalizeRollCall()">✅ Finalizar Lista</button>
+                        <button class="btn btn-secondary editable-btn" onclick="clearActiveDateAttendance()" title="Dejar la clase actual vacía">🔄 Limpiar Lista</button>
+                    </div>
+                </div>
+
+                <!-- Class Metrics Summary -->
+                <div class="stats-summary">
+                    <div class="stat-box">
+                        <div class="stat-value" id="statTotal">0</div>
+                        <div class="stat-label">Total Estudiantes</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" style="color: var(--status-present);" id="statPresent">0</div>
+                        <div class="stat-label">Presentes</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" style="color: var(--status-late);" id="statLate">0</div>
+                        <div class="stat-label">Atrasados</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" style="color: var(--status-retired);" id="statRetired">0</div>
+                        <div class="stat-label">Retirados</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" style="color: var(--status-absent);" id="statAbsent">0</div>
+                        <div class="stat-label">Ausentes</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="statRate">0%</div>
+                        <div class="stat-label">% Asistencia</div>
+                    </div>
+                </div>
+
+                <!-- Simplified Date Navigator Bar Above Table -->
+                <div class="date-navigator-bar">
+                    <button class="btn btn-outline" onclick="navigateDate(-1)" title="Ver clase anterior">◀ Clase Anterior</button>
+                    <div class="active-date-display" id="activeDateDisplay">Clase: --/--</div>
+                    <button class="btn btn-outline" onclick="navigateDate(1)" title="Ver clase siguiente">Clase Siguiente ▶</button>
+                </div>
+
+                <!-- Table Container with Touch Swipe & PC Scrollbar -->
+                <div class="table-wrapper is-locked" id="tableWrapper">
+                    <table class="attendance-table">
+                        <thead>
+                            <tr id="tableHeaderRow">
+                                <th class="col-num">#</th>
+                                <th class="col-name-cell">Apellidos y Nombres</th>
+                                <th class="col-summary">Resumen %</th>
+                                <!-- Reverse chronological class date columns (DD/MM) appended here -->
+                            </tr>
+                        </thead>
+                        <tbody id="attendanceTbody">
+                            <!-- Student rows rendered dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Legend -->
+                <div class="legend-bar">
+                    <div class="legend-item"><span class="status-badge st-P" style="width:22px; height:22px; font-size:0.75rem;">P</span> Presente</div>
+                    <div class="legend-item"><span class="status-badge st-L" style="width:22px; height:22px; font-size:0.75rem;">L</span> Atrasado</div>
+                    <div class="legend-item"><span class="status-badge st-R" style="width:22px; height:22px; font-size:0.75rem;">R</span> Retirado</div>
+                    <div class="legend-item"><span class="status-badge st-A" style="width:22px; height:22px; font-size:0.75rem;">A</span> Ausente</div>
+                    <div class="legend-item"><span class="status-badge st-EMPTY" style="width:22px; height:22px; font-size:0.75rem;">-</span> Sin registrar</div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="brand-color-bar" style="margin: 0 auto 10px;">
+                    <div class="bar bar-blue"></div>
+                    <div class="bar bar-red"></div>
+                    <div class="bar bar-yellow"></div>
+                    <div class="bar bar-green"></div>
+                </div>
+                <p class="footer-title">English In-Focus</p>
+                <p class="footer-sub">Prof. Alejandra García Ziehe</p>
+                <p class="footer-motivation">Keep Going!</p>
+            </div>
+        </footer>
+
+    </div>
+</div>
+
+<!-- Student Observation Modal -->
+<div class="student-modal-overlay" id="studentModalOverlay" onclick="handleModalOverlayClick(event)">
+    <div class="student-modal-card">
+        <div class="modal-header">
+            <div>
+                <div class="modal-title-name" id="modalStudentName">NOMBRE ESTUDIANTE</div>
+                <div class="modal-date-tag" id="modalDateTag">Clase: --/--</div>
+            </div>
+            <button class="btn-close-modal" onclick="closeStudentModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="form-label" for="modalComment">Observaciones / Comentarios:</label>
+                <textarea id="modalComment" placeholder="Escriba aquí observaciones o comentarios sobre el estudiante en esta clase..."></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeStudentModal()">Cerrar</button>
+            <button class="btn" id="btnSaveNote" onclick="saveStudentNotes()">💾 Guardar Observación</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- Official Roster Group 1 (31 Students) ---
+    const officialStudentListG1 = [
+        "ACUÑA ACUÑA, DANIEL IGNACIO",
+        "AGUILAR VARGAS, JORGE IGNACIO",
+        "AGUILERA SOLÍS, MARTINA IGNACIA",
+        "ALCA CURIMIL, CAROL ISABEL",
+        "ANTIMÁN AVENDAÑO, SAYEN FERNAN",
+        "ARCOS FLANDES, DAVID ANYELO",
+        "BARRA GUZMAN, CAROLINA ANDREA",
+        "BARRÍA VELÁSQUEZ, KATHERINE AND",
+        "BOHLE GUTIÉRREZ, PAZ FLORENCIA",
+        "BUSTOS REVECO, CAMILA BELÉN",
+        "CÁRDENAS VARGAS, MATÍAS SAMIR",
+        "CARRASCO HENRÍQUEZ, BENJAMÍN ELÍ",
+        "CATALÁN MARILEO, LUIS AMARO AND",
+        "DÍAZ BENITEZ, CONSTANZA JAVIERA",
+        "EPUYAO MOREIRA, TIARE BELÉN",
+        "FERRADA SANTIBÁÑEZ, EMILIA PAZ",
+        "FUENTES LEVICOY, IGNACIO ALFONSO",
+        "GAJARDO GALLEGOS, DAVID ALEJAN",
+        "GARCÉS MARTÍNEZ, CARLOS DYLAN",
+        "GARRIDO ESPARZA, MATÍAS IGNACIO",
+        "GONZÁLEZ LÓPEZ, ROCÍO AILIN",
+        "GOYAN ZUÑIGA, JOSEFA ESTEFANIA",
+        "HOFMANN MAYORGA, ANTONIA ELEON",
+        "JARA MALDONADO, ERICK NICOLÁS",
+        "JÁUREGUI PÉREZ, SOFÍA TRINIDAD",
+        "KOCH CRAVERO, BRUNO ANDRE",
+        "LEPÚN LEFIMAN, JEAN PIERE ALEJAND",
+        "MATTUS CERDA, FRANCISCA CAROLINA",
+        "MAYORGA AGUILAR, PALOMA MARTINA",
+        "POLANCO CARO, MATÍAS BENJAMÍN",
+        "SANTANA INAY, PALOMA DEL CARMEN"
+    ];
+
+    // --- Official Roster Group 2 (27 Students) ---
+    const officialStudentListG2 = [
+        "MILLANES CÁRDENAS, VICENTE IGNAC",
+        "MONTECINO ORTEGA, CONSUELO ALE",
+        "NAVARRO ÁLVAREZ, CONSTANZA SOL",
+        "NÚÑEZ CÁRCAMO, GEIDY ALMENDRA",
+        "OLIVARES SEGURA, MÓNICA CATALINA",
+        "PAILAHUAL NAVARRETE, VALENTINA S",
+        "PALLAUTA ESPINOZA, FERNANDA ALM",
+        "PAVEZ CARRASCO, KURRUF RIMÚ",
+        "PINO FEHRMANN, MONSERRAT CATALI",
+        "QUINTANA PARRA, MARCO ANTONIO",
+        "RELEHUI ALBARRACÍN, CATALINA ARLE",
+        "RIVERA PAILAÑIR, KARLA YAZMIN",
+        "ROJAS ROCHA, SOFÍA CATALINA",
+        "SAINT-JOUR SERRANO, DOMINIQUE AR",
+        "SALFATE ARANCIBIA, ALISON YOHANA",
+        "SANCHEZ MOSQUERA, LAURA SELENA",
+        "SOTO ESPINOZA, SOFÍA ANTONIA",
+        "SOTO LETELIER, FELIPE BENJAMÍN",
+        "TAPIA CUEVAS, VICTORIA MURIEL",
+        "TOLEDO SALINAS, MAKARENA ALEJAN",
+        "TOLOZA MEDINA, MATEO NAHUEL",
+        "TORRES BRAVO, VERÓNICA ORFELINA",
+        "VALDIVIA CARRIZO, ANGÉLICA IGNACIA",
+        "VALLEJOS BARRIENTOS, GABRIELA AN",
+        "VARGAS PAREDES, NICOLÁS ALEXIS",
+        "WETZEL NAVARRO, MATÍAS DANIEL",
+        "ZÚÑIGA BECERRA, PÍA MONSERRAT"
+    ];
+
+    // Endless Circular Status Sequence Array (Includes 'R' Retirado)
+    const STATUS_CYCLE = ['', 'P', 'L', 'R', 'A'];
+
+    // --- System Security & Lock State ---
+    const TEACHER_PASSWORD = "domino";
+    let isTeacherUnlocked = false; // Bloqueado por defecto
+
+    let activeGroup = 'G1'; // 'G1' or 'G2'
+    let studentList = [];
+    let sessions = []; // Array of dates "YYYY-MM-DD"
+    let attendanceData = {}; // Format: { "YYYY-MM-DD": { "STUDENT NAME": "P"|"A"|"L"|"R"|"" } }
+    let studentNotesData = {}; // Format: { "YYYY-MM-DD": { "STUDENT NAME": "Comment text" } }
+    let activeDate = "";
+    let activeModalStudent = null;
+
+    // --- Undo / Redo Engine ---
+    let historyStack = [];
+    let redoStack = [];
+
+    // --- Audio Engine ---
+    let audioCtx = null;
+
+    function initAudio() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+    }
+
+    function playTone(ctx, { type = 'sine', startFreq = 440, endFreq = null, dur = 0.1, gain = 0.1 }) {
+        if (!ctx) return;
+        const time = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+
+        osc.type = type;
+        osc.frequency.setValueAtTime(startFreq, time);
+        if (endFreq !== null) {
+            osc.frequency.exponentialRampToValueAtTime(endFreq, time + dur);
+        }
+
+        osc.connect(gainNode);
+        gainNode.connect(ctx.destination);
+
+        gainNode.gain.setValueAtTime(gain, time);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, time + dur);
+
+        osc.start(time);
+        osc.stop(time + dur);
+    }
+
+    function playSoundForStatus(status) {
+        initAudio();
+        if (!audioCtx) return;
+
+        if (status === 'P') {
+            playTone(audioCtx, { type: 'sine', startFreq: 523.25, endFreq: 659.25, dur: 0.14, gain: 0.15 });
+        } else if (status === 'A') {
+            playTone(audioCtx, { type: 'triangle', startFreq: 261.63, endFreq: 196.00, dur: 0.18, gain: 0.18 });
+        } else if (status === 'L') {
+            playTone(audioCtx, { type: 'sine', startFreq: 440, endFreq: 440, dur: 0.1, gain: 0.12 });
+        } else if (status === 'R') {
+            playTone(audioCtx, { type: 'sine', startFreq: 493.88, endFreq: 392.00, dur: 0.12, gain: 0.15 });
+        } else {
+            playTone(audioCtx, { type: 'triangle', startFreq: 2500, dur: 0.01, gain: 0.1 });
+        }
+    }
+
+    // Helper: Safe Local ISO Date String
+    function getTodayIsoString() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    // --- Lock / Security System Functions ---
+    function checkTeacherPermission() {
+        if (!isTeacherUnlocked) {
+            alert("🔒 Edición Bloqueada. Para modificar la lista, haga clic en el botón 'Profesora' e ingrese la contraseña.");
+            return false;
+        }
+        return true;
+    }
+
+    function toggleTeacherLock() {
+        if (!isTeacherUnlocked) {
+            // Intenta desbloquear
+            const pass = prompt("Ingrese la contraseña de Profesora para habilitar la edición:");
+            if (pass === null) return;
+            if (pass === TEACHER_PASSWORD) {
+                isTeacherUnlocked = true;
+                updateLockUI();
+                alert("🔓 Modo Profesora ACTIVADO. Ahora puede realizar modificaciones.");
+            } else {
+                alert("❌ Contraseña incorrecta. La lista permanece bloqueada.");
+            }
+        } else {
+            // Cierra la edición y guarda localmente
+            isTeacherUnlocked = false;
+            updateLockUI();
+            saveData();
+            alert("🔒 Edición finalizada. La lista se ha guardado correctamente.");
+        }
+    }
+
+    function updateLockUI() {
+        const btnLock = document.getElementById('btnTeacherLock');
+        const editableBtns = document.querySelectorAll('.editable-btn');
+        const tableWrapper = document.getElementById('tableWrapper');
+
+        if (isTeacherUnlocked) {
+            btnLock.className = "btn btn-teacher-unlocked";
+            btnLock.innerHTML = "🔓 Profesora (Edición)";
+            btnLock.title = "Haga clic para cerrar edición";
+            
+            editableBtns.forEach(b => {
+                if (b.id === 'btnUndo') b.disabled = historyStack.length === 0;
+                else if (b.id === 'btnRedo') b.disabled = redoStack.length === 0;
+                else b.disabled = false;
+            });
+            tableWrapper.classList.remove('is-locked');
+        } else {
+            btnLock.className = "btn btn-teacher-locked";
+            btnLock.innerHTML = "🔒 Profesora";
+            btnLock.title = "Haga clic para ingresar contraseña y editar";
+
+            editableBtns.forEach(b => b.disabled = true);
+            tableWrapper.classList.add('is-locked');
+        }
+
+        renderTable();
+    }
+
+    function formatDateToDayMonth(dateStr) {
+        if (!dateStr) return '';
+        const parts = dateStr.split('-');
+        if (parts.length === 3) {
+            return `${parts[2]}/${parts[1]}`;
+        }
+        return dateStr;
+    }
+
+    // --- Simple Date Navigator Helper ---
+    function navigateDate(direction) {
+        if (!sessions || sessions.length === 0) return;
+        const sortedSessions = [...sessions].sort();
+        const currentIndex = sortedSessions.indexOf(activeDate);
+
+        if (currentIndex === -1) return;
+
+        const newIndex = currentIndex + direction;
+        if (newIndex >= 0 && newIndex < sortedSessions.length) {
+            activeDate = sortedSessions[newIndex];
+            document.getElementById('sessionDate').value = activeDate;
+            saveData();
+            renderTable();
+            updateStats();
+            playSoundForStatus('');
+        }
+    }
+
+    function updateDateDisplay() {
+        const displayEl = document.getElementById('activeDateDisplay');
+        if (displayEl) {
+            displayEl.innerText = `Clase Seleccionada: ${formatDateToDayMonth(activeDate)} (${activeDate})`;
+        }
+    }
+
+    // --- Undo / Redo Functions ---
+    function pushHistorySnapshot() {
+        const snapshot = JSON.stringify({
+            studentList: studentList,
+            sessions: sessions,
+            attendanceData: attendanceData,
+            studentNotesData: studentNotesData,
+            activeDate: activeDate
+        });
+
+        historyStack.push(snapshot);
+        if (historyStack.length > 30) historyStack.shift();
+        redoStack = [];
+        updateUndoRedoUI();
+    }
+
+    function undo() {
+        if (!checkTeacherPermission()) return;
+        if (historyStack.length === 0) return;
+
+        const currentSnapshot = JSON.stringify({
+            studentList: studentList,
+            sessions: sessions,
+            attendanceData: attendanceData,
+            studentNotesData: studentNotesData,
+            activeDate: activeDate
+        });
+        redoStack.push(currentSnapshot);
+
+        const prevSnapshot = JSON.parse(historyStack.pop());
+
+        studentList = prevSnapshot.studentList;
+        sessions = prevSnapshot.sessions;
+        attendanceData = prevSnapshot.attendanceData;
+        studentNotesData = prevSnapshot.studentNotesData || {};
+        activeDate = prevSnapshot.activeDate;
+
+        document.getElementById('sessionDate').value = activeDate;
+
+        saveData();
+        renderTable();
+        updateStats();
+        updateUndoRedoUI();
+        playSoundForStatus('');
+    }
+
+    function redo() {
+        if (!checkTeacherPermission()) return;
+        if (redoStack.length === 0) return;
+
+        const currentSnapshot = JSON.stringify({
+            studentList: studentList,
+            sessions: sessions,
+            attendanceData: attendanceData,
+            studentNotesData: studentNotesData,
+            activeDate: activeDate
+        });
+        historyStack.push(currentSnapshot);
+
+        const nextSnapshot = JSON.parse(redoStack.pop());
+
+        studentList = nextSnapshot.studentList;
+        sessions = nextSnapshot.sessions;
+        attendanceData = nextSnapshot.attendanceData;
+        studentNotesData = nextSnapshot.studentNotesData || {};
+        activeDate = nextSnapshot.activeDate;
+
+        document.getElementById('sessionDate').value = activeDate;
+
+        saveData();
+        renderTable();
+        updateStats();
+        updateUndoRedoUI();
+        playSoundForStatus('');
+    }
+
+    function updateUndoRedoUI() {
+        const btnUndo = document.getElementById('btnUndo');
+        const btnRedo = document.getElementById('btnRedo');
+        if (btnUndo) btnUndo.disabled = !isTeacherUnlocked || historyStack.length === 0;
+        if (btnRedo) btnRedo.disabled = !isTeacherUnlocked || redoStack.length === 0;
+    }
+
+    // Jump to Date when clicking on table header
+    function selectDateFromHeader(dateStr) {
+        if (activeDate === dateStr) return;
+
+        activeDate = dateStr;
+        document.getElementById('sessionDate').value = activeDate;
+
+        saveData();
+        renderTable();
+        updateStats();
+        playSoundForStatus('');
+    }
+
+    // --- Student Observation Modal ---
+    function openStudentModal(studentName) {
+        activeModalStudent = studentName;
+
+        document.getElementById('modalStudentName').innerText = studentName;
+        document.getElementById('modalDateTag').innerText = `Clase: ${formatDateToDayMonth(activeDate)} (${activeDate})`;
+
+        let currentNote = (studentNotesData[activeDate] && studentNotesData[activeDate][studentName]) ? studentNotesData[activeDate][studentName] : '';
+        let commentText = typeof currentNote === 'string' ? currentNote : (currentNote.comment || '');
+
+        const txtArea = document.getElementById('modalComment');
+        const btnSave = document.getElementById('btnSaveNote');
+
+        txtArea.value = commentText;
+        txtArea.readOnly = !isTeacherUnlocked;
+        btnSave.disabled = !isTeacherUnlocked;
+
+        document.getElementById('studentModalOverlay').classList.add('active');
+    }
+
+    function closeStudentModal() {
+        document.getElementById('studentModalOverlay').classList.remove('active');
+        activeModalStudent = null;
+    }
+
+    function handleModalOverlayClick(e) {
+        if (e.target.id === 'studentModalOverlay') {
+            closeStudentModal();
+        }
+    }
+
+    function saveStudentNotes() {
+        if (!checkTeacherPermission()) return;
+        if (!activeModalStudent || !activeDate) return;
+
+        pushHistorySnapshot();
+
+        const commentVal = document.getElementById('modalComment').value.trim();
+
+        if (!studentNotesData[activeDate]) studentNotesData[activeDate] = {};
+
+        if (!commentVal) {
+            delete studentNotesData[activeDate][activeModalStudent];
+        } else {
+            studentNotesData[activeDate][activeModalStudent] = { comment: commentVal };
+        }
+
+        playSoundForStatus('P');
+        saveData();
+        renderTable();
+        closeStudentModal();
+    }
+
+    // --- Core Initialization ---
+    function initApp() {
+        const savedGroup = localStorage.getItem('eif_active_group');
+        if (savedGroup === 'G1' || savedGroup === 'G2') {
+            activeGroup = savedGroup;
+        }
+
+        switchGroupUI(activeGroup);
+        updateLockUI();
+    }
+
+    function switchGroup(groupKey) {
+        if (activeGroup === groupKey) return;
+        activeGroup = groupKey;
+        localStorage.setItem('eif_active_group', activeGroup);
+
+        switchGroupUI(activeGroup);
+    }
+
+    function switchGroupUI(groupKey) {
+        historyStack = [];
+        redoStack = [];
+        updateUndoRedoUI();
+        if (activeModalStudent) closeStudentModal();
+
+        document.getElementById('tabG1').classList.toggle('active', groupKey === 'G1');
+        document.getElementById('tabG2').classList.toggle('active', groupKey === 'G2');
+        document.getElementById('contentTitle').innerText = `Control de Asistencia BM-I (${groupKey})`;
+        document.title = `English In-Focus | Control de Asistencia BM-I (${groupKey})`;
+
+        loadGroupData();
+        renderTable();
+        updateStats();
+        updateLockUI();
+    }
+
+    function loadGroupData() {
+        const prefix = activeGroup === 'G1' ? 'eif_g1_' : 'eif_g2_';
+        const defaultList = activeGroup === 'G1' ? officialStudentListG1 : officialStudentListG2;
+
+        const savedStudents = localStorage.getItem(`${prefix}attendance_students`);
+        const savedSessionsRaw = localStorage.getItem(`${prefix}attendance_sessions`);
+        const savedDataRaw = localStorage.getItem(`${prefix}attendance_data`);
+        const savedNotesRaw = localStorage.getItem(`${prefix}student_notes`);
+
+        studentList = savedStudents ? JSON.parse(savedStudents) : [...defaultList];
+        sortStudentsAlphabetically();
+
+        if (savedSessionsRaw && savedDataRaw) {
+            sessions = JSON.parse(savedSessionsRaw);
+            attendanceData = JSON.parse(savedDataRaw);
+        } else {
+            const today = getTodayIsoString();
+            sessions = [today];
+            attendanceData = { [today]: {} };
+        }
+
+        studentNotesData = savedNotesRaw ? JSON.parse(savedNotesRaw) : {};
+
+        if (!sessions.includes(activeDate)) {
+            activeDate = sessions[sessions.length - 1];
+        }
+        document.getElementById('sessionDate').value = activeDate;
+    }
+
+    function saveData() {
+        const prefix = activeGroup === 'G1' ? 'eif_g1_' : 'eif_g2_';
+        localStorage.setItem(`${prefix}attendance_students`, JSON.stringify(studentList));
+        localStorage.setItem(`${prefix}attendance_sessions`, JSON.stringify(sessions));
+        localStorage.setItem(`${prefix}attendance_data`, JSON.stringify(attendanceData));
+        localStorage.setItem(`${prefix}student_notes`, JSON.stringify(studentNotesData));
+    }
+
+    function sortStudentsAlphabetically() {
+        studentList.sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
+    }
+
+    // --- Student Management ---
+    function addStudent() {
+        if (!checkTeacherPermission()) return;
+        let name = prompt(`[Grupo ${activeGroup}] Ingrese Nombre y Apellidos del nuevo estudiante (ej: TAPIA PÉREZ, JUAN):`);
+        if (name && name.trim()) {
+            const formattedName = name.trim().toUpperCase();
+            if (!studentList.includes(formattedName)) {
+                pushHistorySnapshot();
+
+                studentList.push(formattedName);
+                sortStudentsAlphabetically();
+                
+                saveData();
+                renderTable();
+                updateStats();
+            } else {
+                alert("El estudiante ya se encuentra en la lista.");
+            }
+        }
+    }
+
+    // --- Editar Nombre / Ortografía de Estudiante ---
+    function editStudentName(index) {
+        if (!checkTeacherPermission()) return;
+
+        const oldName = studentList[index];
+        let newName = prompt(`[Grupo ${activeGroup}] Modificar nombre o corregir ortografía:`, oldName);
+
+        if (newName && newName.trim()) {
+            newName = newName.trim().toUpperCase();
+
+            // Si no cambió el nombre, finalizar
+            if (newName === oldName) return;
+
+            // Verificar si el nuevo nombre ya pertenece a otro estudiante distinto
+            if (studentList.includes(newName)) {
+                alert("Ya existe otro estudiante registrado en la lista con ese mismo nombre.");
+                return;
+            }
+
+            pushHistorySnapshot();
+
+            // 1. Reemplazar nombre en la lista principal
+            studentList[index] = newName;
+            sortStudentsAlphabetically();
+
+            // 2. Migrar historial de asistencias a través de todas las fechas registradas
+            sessions.forEach(dateStr => {
+                if (attendanceData[dateStr] && attendanceData[dateStr][oldName] !== undefined) {
+                    attendanceData[dateStr][newName] = attendanceData[dateStr][oldName];
+                    delete attendanceData[dateStr][oldName];
+                }
+                if (studentNotesData[dateStr] && studentNotesData[dateStr][oldName] !== undefined) {
+                    studentNotesData[dateStr][newName] = studentNotesData[dateStr][oldName];
+                    delete studentNotesData[dateStr][oldName];
+                }
+            });
+
+            saveData();
+            renderTable();
+            updateStats();
+        }
+    }
+
+    function deleteStudent(index) {
+        if (!checkTeacherPermission()) return;
+        const name = studentList[index];
+        if (confirm(`[Grupo ${activeGroup}] ¿Está segura de eliminar a "${name}" de la lista?`)) {
+            pushHistorySnapshot();
+
+            studentList.splice(index, 1);
+
+            sessions.forEach(dateStr => {
+                if (attendanceData[dateStr] && attendanceData[dateStr][name]) {
+                    delete attendanceData[dateStr][name];
+                }
+                if (studentNotesData[dateStr] && studentNotesData[dateStr][name]) {
+                    delete studentNotesData[dateStr][name];
+                }
+            });
+
+            saveData();
+            renderTable();
+            updateStats();
+        }
+    }
+
+    // --- Session / Date Management ---
+    function switchDateSession() {
+        const selectedDate = document.getElementById('sessionDate').value;
+        if (!selectedDate || selectedDate.length !== 10) return;
+
+        if (!sessions.includes(selectedDate)) {
+            if (!isTeacherUnlocked) {
+                alert("🔒 La fecha seleccionada aún no está creada en el registro. Para agregar una nueva fecha de clase, habilite el modo Profesora.");
+                document.getElementById('sessionDate').value = activeDate;
+                return;
+            }
+            pushHistorySnapshot();
+            sessions.push(selectedDate);
+            sessions.sort();
+        }
+
+        activeDate = selectedDate;
+        if (!attendanceData[activeDate]) {
+            attendanceData[activeDate] = {};
+        }
+
+        saveData();
+        renderTable();
+        updateStats();
+    }
+
+    function addNewSession() {
+        if (!checkTeacherPermission()) return;
+        const today = getTodayIsoString();
+        let newDate = prompt(`[Grupo ${activeGroup}] Ingrese la fecha de la nueva clase (YYYY-MM-DD):`, today);
+        if (newDate && newDate.trim()) {
+            newDate = newDate.trim();
+            pushHistorySnapshot();
+
+            if (!sessions.includes(newDate)) {
+                sessions.push(newDate);
+                sessions.sort();
+            }
+            activeDate = newDate;
+            document.getElementById('sessionDate').value = activeDate;
+            if (!attendanceData[activeDate]) {
+                attendanceData[activeDate] = {};
+            }
+            saveData();
+            renderTable();
+            updateStats();
+        }
+    }
+
+    function editCurrentSessionDate() {
+        if (!checkTeacherPermission()) return;
+        if (!activeDate) return;
+
+        const dateFormatted = formatDateToDayMonth(activeDate);
+        let newDate = prompt(`[Grupo ${activeGroup}] Ingrese la nueva fecha para la clase del ${dateFormatted} (YYYY-MM-DD):`, activeDate);
+
+        if (newDate && newDate.trim() && newDate !== activeDate) {
+            newDate = newDate.trim();
+
+            if (sessions.includes(newDate)) {
+                alert(`La fecha ${formatDateToDayMonth(newDate)} (${newDate}) ya existe en el registro de este grupo.`);
+                return;
+            }
+
+            pushHistorySnapshot();
+
+            attendanceData[newDate] = attendanceData[activeDate] || {};
+            delete attendanceData[activeDate];
+
+            if (studentNotesData[activeDate]) {
+                studentNotesData[newDate] = studentNotesData[activeDate];
+                delete studentNotesData[activeDate];
+            }
+
+            const sessionIdx = sessions.indexOf(activeDate);
+            if (sessionIdx !== -1) {
+                sessions[sessionIdx] = newDate;
+            } else {
+                sessions.push(newDate);
+            }
+            sessions.sort();
+
+            activeDate = newDate;
+            document.getElementById('sessionDate').value = activeDate;
+
+            saveData();
+            renderTable();
+            updateStats();
+
+            alert(`Fecha actualizada con éxito a ${formatDateToDayMonth(newDate)}.`);
+        }
+    }
+
+    function deleteCurrentSession() {
+        if (!checkTeacherPermission()) return;
+        if (sessions.length <= 1) {
+            alert("Debe haber al menos una fecha de clase registrada.");
+            return;
+        }
+
+        const dateFormatted = formatDateToDayMonth(activeDate);
+        if (confirm(`[Grupo ${activeGroup}] ¿Desea eliminar definitivamente la clase del ${dateFormatted} (${activeDate})?`)) {
+            pushHistorySnapshot();
+
+            delete attendanceData[activeDate];
+            if (studentNotesData[activeDate]) delete studentNotesData[activeDate];
+
+            sessions = sessions.filter(s => s !== activeDate);
+            activeDate = sessions[sessions.length - 1];
+            document.getElementById('sessionDate').value = activeDate;
+
+            saveData();
+            renderTable();
+            updateStats();
+        }
+    }
+
+    function clearActiveDateAttendance() {
+        if (!checkTeacherPermission()) return;
+        if (!activeDate) return;
+        const dateFormatted = formatDateToDayMonth(activeDate);
+        if (confirm(`[Grupo ${activeGroup}] ¿Está segura de dejar la lista del día ${dateFormatted} sin registro (vacía)?`)) {
+            pushHistorySnapshot();
+
+            attendanceData[activeDate] = {};
+            if (studentNotesData[activeDate]) delete studentNotesData[activeDate];
+
+            playSoundForStatus('');
+            saveData();
+            renderTable();
+            updateStats();
+        }
+    }
+
+    function markAllPresent() {
+        if (!checkTeacherPermission()) return;
+        if (!activeDate) return;
+        if (!attendanceData[activeDate]) attendanceData[activeDate] = {};
+
+        pushHistorySnapshot();
+
+        studentList.forEach(studentName => {
+            attendanceData[activeDate][studentName] = 'P';
+        });
+
+        playSoundForStatus('P');
+        saveData();
+        renderTable();
+        updateStats();
+    }
+
+    function markAllAbsent() {
+        if (!checkTeacherPermission()) return;
+        if (!activeDate) return;
+        if (!attendanceData[activeDate]) attendanceData[activeDate] = {};
+
+        pushHistorySnapshot();
+
+        studentList.forEach(studentName => {
+            attendanceData[activeDate][studentName] = 'A';
+        });
+
+        playSoundForStatus('A');
+        saveData();
+        renderTable();
+        updateStats();
+    }
+
+    // --- Table Rendering ---
+    function renderTable() {
+        const headerRow = document.getElementById('tableHeaderRow');
+        const tbody = document.getElementById('attendanceTbody');
+
+        updateDateDisplay();
+
+        const displaySessions = [...sessions].reverse();
+
+        // Header Structure
+        headerRow.innerHTML = `
+            <th class="col-num">#</th>
+            <th class="col-name-cell">Apellidos y Nombres</th>
+            <th class="col-summary">Resumen %</th>
+        `;
+
+        // Render Date Columns
+        displaySessions.forEach(dateStr => {
+            const isActive = (dateStr === activeDate);
+            const th = document.createElement('th');
+            th.className = `status-cell clickable-header ${isActive ? 'active-column-header' : ''}`;
+            th.innerText = formatDateToDayMonth(dateStr);
+            th.title = `Haga clic para seleccionar la clase del ${formatDateToDayMonth(dateStr)} (${dateStr})`;
+            th.onclick = () => selectDateFromHeader(dateStr);
+
+            headerRow.appendChild(th);
+        });
+
+        // Render Student Rows
+        tbody.innerHTML = '';
+        studentList.forEach((studentName, idx) => {
+            const tr = document.createElement('tr');
+            tr.id = `student-row-${idx}`;
+
+            const noteObj = (studentNotesData[activeDate] && studentNotesData[activeDate][studentName]);
+            const hasNotes = !!(noteObj && (typeof noteObj === 'string' ? noteObj.trim() : (noteObj.comment && noteObj.comment.trim())));
+
+            // # Column
+            const tdNum = document.createElement('td');
+            tdNum.className = 'col-num';
+            tdNum.innerText = idx + 1;
+            tr.appendChild(tdNum);
+
+            // Name Column con botones de Editar (✏️) y Borrar (🗑️)
+            const tdName = document.createElement('td');
+            tdName.className = 'col-name-cell';
+            tdName.innerHTML = `
+                <div class="col-name-container">
+                    <div class="student-name-wrapper">
+                        <span class="student-name-text" onclick="openStudentModal('${studentName}')" title="Haga clic para ver o escribir observaciones">${studentName}</span>
+                        ${hasNotes ? `<span class="note-indicator-icon" onclick="openStudentModal('${studentName}')" title="Observación registrada">📝</span>` : ''}
+                    </div>
+                    ${isTeacherUnlocked ? `
+                        <div class="student-actions">
+                            <button class="btn-edit-student" onclick="editStudentName(${idx})" title="Editar nombre / corregir ortografía">✏️</button>
+                            <button class="btn-del-student" onclick="deleteStudent(${idx})" title="Eliminar estudiante">🗑️</button>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            tr.appendChild(tdName);
+
+            // Attendance Summary Column
+            let stP = 0, stL = 0, stR = 0, stA = 0;
+            sessions.forEach(d => {
+                const val = (attendanceData[d] && attendanceData[d][studentName]) ? attendanceData[d][studentName] : '';
+                if (val === 'P') stP++;
+                if (val === 'L') stL++;
+                if (val === 'R') stR++;
+                if (val === 'A') stA++;
+            });
+            const stTotalRecorded = stP + stL + stR + stA;
+            const stRate = stTotalRecorded > 0 ? Math.round(((stP + stL + stR) / stTotalRecorded) * 100) : 0;
+
+            const tdSummary = document.createElement('td');
+            tdSummary.className = 'col-summary';
+            tdSummary.innerHTML = `<strong>${stRate}%</strong> <span style="font-size:0.65rem; color: var(--text-main);">(${stP}P/${stL}L/${stR}R/${stA}A)</span>`;
+            tr.appendChild(tdSummary);
+
+            // Attendance Cells
+            displaySessions.forEach(dateStr => {
+                const isActive = (dateStr === activeDate);
+                const tdStatus = document.createElement('td');
+                tdStatus.className = `status-cell ${isActive ? 'active-column-cell' : ''}`;
+
+                const statusVal = (attendanceData[dateStr] && attendanceData[dateStr][studentName]) ? attendanceData[dateStr][studentName] : '';
+                
+                const badge = document.createElement('div');
+                badge.className = `status-badge st-${statusVal || 'EMPTY'}`;
+                badge.innerText = statusVal || '-';
+                badge.onclick = () => toggleStatusDirectly(dateStr, studentName);
+
+                tdStatus.appendChild(badge);
+                tr.appendChild(tdStatus);
+            });
+
+            tbody.appendChild(tr);
+        });
+    }
+
+    // --- Continuous Infinite Status Cycle ---
+    function toggleStatusDirectly(dateStr, studentName) {
+        if (!checkTeacherPermission()) return;
+
+        if (!attendanceData[dateStr]) attendanceData[dateStr] = {};
+        
+        pushHistorySnapshot();
+
+        const current = attendanceData[dateStr][studentName] || '';
+        const currentIndex = STATUS_CYCLE.indexOf(current);
+
+        const nextIndex = (currentIndex === -1 || currentIndex === STATUS_CYCLE.length - 1) ? 0 : currentIndex + 1;
+        const next = STATUS_CYCLE[nextIndex];
+
+        attendanceData[dateStr][studentName] = next;
+        playSoundForStatus(next);
+        saveData();
+        renderTable();
+        updateStats();
+    }
+
+    function finalizeRollCall() {
+        if (!checkTeacherPermission()) return;
+        if (!activeDate) return;
+
+        if (!attendanceData[activeDate]) attendanceData[activeDate] = {};
+
+        pushHistorySnapshot();
+
+        studentList.forEach(studentName => {
+            if (!attendanceData[activeDate][studentName]) {
+                attendanceData[activeDate][studentName] = 'A';
+            }
+        });
+
+        playSoundForStatus('A');
+        saveData();
+        renderTable();
+        updateStats();
+
+        alert(`[Grupo ${activeGroup}] Lista finalizada. Todos los estudiantes sin registrar han quedado marcados como Ausentes (A).`);
+    }
+
+    // --- Metrics Update ---
+    function updateStats() {
+        if (!activeDate || !attendanceData[activeDate]) {
+            document.getElementById('statTotal').innerText = studentList.length;
+            document.getElementById('statPresent').innerText = 0;
+            document.getElementById('statLate').innerText = 0;
+            document.getElementById('statRetired').innerText = 0;
+            document.getElementById('statAbsent').innerText = 0;
+            document.getElementById('statRate').innerText = '0%';
+            return;
+        }
+
+        const currentMap = attendanceData[activeDate];
+        let pCount = 0, lCount = 0, rCount = 0, aCount = 0;
+
+        studentList.forEach(sName => {
+            const val = currentMap[sName];
+            if (val === 'P') pCount++;
+            if (val === 'L') lCount++;
+            if (val === 'R') rCount++;
+            if (val === 'A') aCount++;
+        });
+
+        const totalStudents = studentList.length;
+        const rate = totalStudents > 0 ? Math.round(((pCount + lCount + rCount) / totalStudents) * 100) : 0;
+
+        document.getElementById('statTotal').innerText = totalStudents;
+        document.getElementById('statPresent').innerText = pCount;
+        document.getElementById('statLate').innerText = lCount;
+        document.getElementById('statRetired').innerText = rCount;
+        document.getElementById('statAbsent').innerText = aCount;
+        document.getElementById('statRate').innerText = `${rate}%`;
+    }
+
+    // Keyboard Shortcuts Listener
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && activeModalStudent) {
+            closeStudentModal();
+            return;
+        }
+
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+            if (e.shiftKey) {
+                redo();
+            } else {
+                undo();
+            }
+        } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
+            redo();
+        }
+    });
+
+    document.body.addEventListener('click', () => initAudio(), { once: true });
+    window.onload = initApp;
+</script>
+</body>
+</html>
